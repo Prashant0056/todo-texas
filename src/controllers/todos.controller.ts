@@ -5,3 +5,8 @@ export const getTodos = (req: Request, res: Response, next: NextFunction) => {
     const response = TodoService.getTodo()
     res.send(response)
 }
+
+export const postTodos = (req: Request, res: Response, next: NextFunction) => {
+    const response = TodoService.postTodos(req.body)
+    res.send(response)
+}

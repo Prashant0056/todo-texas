@@ -1,5 +1,5 @@
 import express from 'express'
-import todosRouter from './routes/todos.router'
+import todoRouter from './routes/todo.router'
 const app = express()
 
 app.use(express.json())
@@ -10,6 +10,6 @@ app.listen(PORT, () => {
     console.log(`Server ready at : localhost:${PORT}`)
 })
 
-app.use('/todos', todosRouter)
+app.use('/todos', todoRouter)
 
 export default app
