@@ -1,5 +1,6 @@
 import express from 'express'
 import todoRouter from './routes/todo.router'
+import { Response, Request, NextFunction } from 'express'
 const app = express()
 
 app.use(express.json())
@@ -11,5 +12,15 @@ app.listen(PORT, () => {
 })
 
 app.use('/todos', todoRouter)
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    if (err.isBoom) {
+        const error = {
+            code: err.output.statusCode,
+            message: err.output.payload.message || err.output.payload.status,
+        }
+        res.status(error.code).json({ error })
+    }
+})
 
 export default app
