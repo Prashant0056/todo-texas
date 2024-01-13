@@ -29,11 +29,22 @@ export const getTodo = async (id: any) => {
 
 //DELETE  by id
 export const deleteTodo = async (id: any) => {
-    return await prisma.todo.delete({
-        where: {
-            id: Number(id),
-        },
-    })
+    try {
+        const existance = await prisma.todo.findUniqueOrThrow({
+            where: {
+                id: Number(id),
+            },
+        })
+        if (existance)
+            return await prisma.todo.delete({
+                where: {
+                    id: Number(id),
+                },
+            })
+    } catch (err: any) {
+        if (err.code === 'P2025') throw Boom.notFound('Record not found')
+        else throw err
+    }
 }
 
 //UPDATE by id

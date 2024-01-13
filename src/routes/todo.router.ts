@@ -1,17 +1,23 @@
 import { Router } from 'express'
 import * as todoController from '../controller/todo.controller'
-import { validate } from '../util/validate'
+import { validate, validateByid } from '../util/validate'
 import { postTodoDTO } from '../validators/postTodo.validator'
+import { getTodoDTO } from '../validators/getTodo.validator'
+import { deleteTodoDTO } from '../validators/deleteTodo.validator'
 const router = Router()
 
 //POST to databse
 router.post('/', validate(postTodoDTO), todoController.postTodos)
 
 //GET todos by id
-router.get('/:id', todoController.getTodosByID)
+router.get('/:id', validateByid(getTodoDTO), todoController.getTodosByID)
 
 //DELETE by id
-router.delete('/:id', todoController.deleteTodosByID)
+router.delete(
+    '/:id',
+    validateByid(deleteTodoDTO),
+    todoController.deleteTodosByID
+)
 
 //UPDATE by id
 router.put('/:id', todoController.updateTodo)
