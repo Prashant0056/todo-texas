@@ -41,6 +41,10 @@ export const updateTodo = async (
     res: Response,
     next: NextFunction
 ) => {
-    const response = await todoService.updateTodo(req.params.id, req.body)
-    res.json(response)
+    try {
+        const response = await todoService.updateTodo(req.params.id, req.body)
+        res.json(response)
+    } catch (err) {
+        next(err)
+    }
 }

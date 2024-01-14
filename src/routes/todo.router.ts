@@ -4,6 +4,10 @@ import { validate, validateByid } from '../util/validate'
 import { postTodoDTO } from '../validators/postTodo.validator'
 import { getTodoDTO } from '../validators/getTodo.validator'
 import { deleteTodoDTO } from '../validators/deleteTodo.validator'
+import {
+    updateTodoDTObody,
+    updateTodoDTOid,
+} from '../validators/updateTodo.validator'
 const router = Router()
 
 //POST to databse
@@ -20,6 +24,11 @@ router.delete(
 )
 
 //UPDATE by id
-router.put('/:id', todoController.updateTodo)
+router.put(
+    '/:id',
+    validateByid(updateTodoDTOid),
+    validate(updateTodoDTObody),
+    todoController.updateTodo
+)
 
 export default router

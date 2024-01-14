@@ -5,8 +5,8 @@ export const postTodoDTO = z.object({
         title: z.string({
             required_error: 'Title is required',
         }),
-        status: z.string({
-            required_error: 'Status is required',
+        status: z.enum(['completed', 'ongoing'], {
+            required_error: 'Status can only be either completed or ongoing',
         }),
     }),
 })
