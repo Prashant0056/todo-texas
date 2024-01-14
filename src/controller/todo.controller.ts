@@ -27,8 +27,12 @@ export const deleteTodosByID = async (
     res: Response,
     next: NextFunction
 ) => {
-    const response = await todoService.deleteTodo(req.params.id)
-    res.json(response)
+    try {
+        const response = await todoService.deleteTodo(req.params.id)
+        res.json(response)
+    } catch (err) {
+        next(err)
+    }
 }
 
 //UPDATE by id
