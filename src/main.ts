@@ -1,5 +1,6 @@
 import express from 'express'
 import todoRouter from './routes/todo.router'
+import userRouter from './routes/user.router'
 import { Response, Request, NextFunction } from 'express'
 import buildError from './util/build-errors'
 const app = express()
@@ -13,6 +14,8 @@ app.listen(PORT, () => {
 })
 
 app.use('/todos', todoRouter)
+
+app.use('/user', userRouter)
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     const error = buildError(err)
