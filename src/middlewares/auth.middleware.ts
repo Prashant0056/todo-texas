@@ -32,6 +32,7 @@ export function isAdmin(
     const { user } = req
 
     if (user && user.isAdmin) {
+        console.log(user.isAdmin)
         next()
     } else {
         throw Boom.forbidden('User is not an admin')

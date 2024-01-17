@@ -10,6 +10,7 @@ import {
     verifyAccessToken,
     createRefreshToken,
 } from '../util/token.util'
+import { isAdmin } from '../middlewares/auth.middleware'
 
 export const signup = async (user: z.infer<typeof signupBodyDTO>) => {
     const { email, password, isAdmin } = user
@@ -18,10 +19,12 @@ export const signup = async (user: z.infer<typeof signupBodyDTO>) => {
             data: {
                 email,
                 password: await bcrypt.hash(password, 10),
+                isAdmin: isAdmin,
             },
             select: {
                 email: true,
                 id: true,
+                isAdmin: true,
             },
         })
     } catch (err: any) {
@@ -41,9 +44,8 @@ export const login = async (email: string, password: string) => {
     if (!passwordMatch) {
         throw Boom.badRequest('Username or password is incorrect.')
     }
-
-    const accessToken = createAccessToken(user.id, true)
-    const refreshToken = createRefreshToken(user.id, true)
+    const accessToken = createAccessToken(user.id, user.isAdmin)
+    const refreshToken = createRefreshToken(user.id, user.isAdmin)
 
     return { accessToken, refreshToken }
 }
