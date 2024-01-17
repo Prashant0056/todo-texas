@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import * as userService from '../service/user.service'
 import { signupBodyDTO } from '../validators/signup.validator'
+import { loginBodyDTO } from '../validators/login.validator'
 
 export const register = async (
     req: Request,
@@ -14,5 +15,39 @@ export const register = async (
         res.status(201).json(createdUser)
     } catch (err) {
         next(err)
+    }
+}
+
+export const login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { email, password } = loginBodyDTO.parse(req.body)
+
+        const { accessToken, refreshToken } = await userService.login(
+            email,
+            password
+        )
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+        }).json({ accessToken })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const refreshToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { refreshToken } = req.cookies
+    try {
+        const token = await userService.refresh(refreshToken)
+        res.json({ accessToken: token })
+    } catch (error) {
+        next(error)
     }
 }

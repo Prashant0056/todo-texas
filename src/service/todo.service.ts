@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom'
 import { PrismaClient } from '@prisma/client'
+import router from '../routes/todo.router'
 const prisma = new PrismaClient()
 
 //POST todos
@@ -9,6 +10,16 @@ export const postTodo = async (body: any) => {
         data: {
             title,
             status,
+        },
+    })
+}
+
+//GET all todo
+export const getAll = async () => {
+    return await prisma.todo.findMany({
+        select: {
+            id: true,
+            title: true,
         },
     })
 }

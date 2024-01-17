@@ -1,33 +1,46 @@
 import { Router } from 'express'
 import * as todoController from '../controller/todo.controller'
-import { validate, validateByid } from '../util/validate'
+import { validate } from '../util/validate'
 import { postTodoDTO } from '../validators/postTodo.validator'
 import { getTodoDTO } from '../validators/getTodo.validator'
 import { deleteTodoDTO } from '../validators/deleteTodo.validator'
-import {
-    updateTodoDTObody,
-    updateTodoDTOid,
-} from '../validators/updateTodo.validator'
+import { updateTodoDTO } from '../validators/updateTodo.validator'
+import { authenticateToken, isAdmin } from '../middlewares/auth.middleware'
 const router = Router()
 
 //POST to databse
-router.post('/', validate(postTodoDTO), todoController.postTodos)
+router.post(
+    '/',
+    validate(postTodoDTO),
+    authenticateToken,
+    todoController.postTodos
+)
+
+///GET all todos
+router.get('/', authenticateToken, todoController.getAllTodos)
 
 //GET todos by id
-router.get('/:id', validateByid(getTodoDTO), todoController.getTodosByID)
+router.get(
+    '/:id',
+    validate(getTodoDTO),
+    authenticateToken,
+    todoController.getTodosByID
+)
 
 //DELETE by id
 router.delete(
     '/:id',
-    validateByid(deleteTodoDTO),
+    validate(deleteTodoDTO),
+    authenticateToken,
+    isAdmin,
     todoController.deleteTodosByID
 )
 
 //UPDATE by id
 router.put(
     '/:id',
-    validateByid(updateTodoDTOid),
-    validate(updateTodoDTObody),
+    validate(updateTodoDTO),
+    authenticateToken,
     todoController.updateTodo
 )
 

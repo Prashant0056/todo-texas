@@ -7,6 +7,20 @@ export const postTodos = (req: Request, res: Response, next: NextFunction) => {
     res.send(response)
 }
 
+//GET all todos
+export const getAllTodos = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const response = await todoService.getAll()
+        res.json(response)
+    } catch (err) {
+        next(err)
+    }
+}
+
 //GET by id
 export const getTodosByID = async (
     req: Request,
