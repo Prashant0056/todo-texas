@@ -5,7 +5,7 @@ export const signupBodyDTO = z.object({
         required_error: 'email is required',
     }),
     password: z.string({
-        required_error: 'email is required',
+        required_error: 'password is required',
     }),
     isAdmin: z.boolean().default(false),
 })

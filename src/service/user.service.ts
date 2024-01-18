@@ -3,15 +3,14 @@ import prisma from '../util/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { signupBodyDTO } from '../validators/signup.validator'
-import { loginBodyDTO } from '../validators/login.validator'
 import {
     createAccessToken,
     verifyRefreshToken,
     verifyAccessToken,
     createRefreshToken,
 } from '../util/token.util'
-import { isAdmin } from '../middlewares/auth.middleware'
 
+//SIGNUP
 export const signup = async (user: z.infer<typeof signupBodyDTO>) => {
     const { email, password, isAdmin } = user
     try {
@@ -50,6 +49,7 @@ export const login = async (email: string, password: string) => {
     return { accessToken, refreshToken }
 }
 
+//REFRESH
 export async function refresh(refreshToken: string) {
     try {
         const decodedToken: any = verifyRefreshToken(refreshToken)
@@ -58,4 +58,24 @@ export async function refresh(refreshToken: string) {
     } catch (error) {
         throw Boom.unauthorized('User is not logged in')
     }
+}
+
+//DELETE USER
+export const removeUser = async (email: string, password: string) => {
+    const user = await prisma.user.findFirst({ where: { email } })
+    if (!user) {
+        throw Boom.badRequest('Username or password is incorrect.')
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password)
+
+    if (!passwordMatch) {
+        throw Boom.badRequest('Username or password is incorrect.')
+    }
+
+    return prisma.user.delete({
+        where: {
+            email: user.email,
+        },
+    })
 }

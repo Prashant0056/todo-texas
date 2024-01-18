@@ -3,6 +3,7 @@ import * as userService from '../service/user.service'
 import { signupBodyDTO } from '../validators/signup.validator'
 import { loginBodyDTO } from '../validators/login.validator'
 
+//REGISTER
 export const register = async (
     req: Request,
     res: Response,
@@ -18,6 +19,7 @@ export const register = async (
     }
 }
 
+//LOGIN
 export const login = async (
     req: Request,
     res: Response,
@@ -33,6 +35,22 @@ export const login = async (
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
         }).json({ accessToken })
+    } catch (error) {
+        next(error)
+    }
+}
+
+//DELETE user
+export const deleteUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { email, password } = loginBodyDTO.parse(req.body)
+
+        const user = await userService.removeUser(email, password)
+        res.json('deleted')
     } catch (error) {
         next(error)
     }

@@ -7,7 +7,7 @@ const router = Router()
 
 router.post('/signup', userController.register)
 router.post('/login', userController.login)
-
+router.delete('/delete', userController.deleteUser)
 router.post('/refresh', userController.refreshToken)
 
 export default router
